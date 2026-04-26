@@ -4,7 +4,7 @@ setup(
     name="hivemind-gnn",
     version="0.1.0",
     description="Neural Combinatorial Optimization for Autonomous Bee-Worker Routing",
-    author="Navid Kermani",
+    author="Nathan Kermani",
     packages=find_packages(),
     python_requires=">=3.8",
     install_requires=[

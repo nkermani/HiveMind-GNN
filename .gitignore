@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# HiveMind-GNN
+checkpoints/
+*.pt
+visualizations/*.png
+!visualizations/.gitkeep
