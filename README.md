@@ -199,7 +199,6 @@ HiveMind-GNN/
 
 ## 📈 Comparison with Alternatives
 
-![Comparison](assets/07_comparison.png)
 
 | Approach | Speed | Optimality | Adaptivity | Scalability |
 |----------|-------|------------|------------|-------------|
