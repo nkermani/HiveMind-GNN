@@ -51,8 +51,6 @@ Traditional algorithms (Dijkstra, A*) fail here because:
 
 ## 🏗️ Architecture
 
-![Architecture](assets/06_architecture.png)
-
 ```
 HiveMindGNN
 ├── Node Encoder (7 → 64 dim)
