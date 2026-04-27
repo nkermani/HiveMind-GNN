@@ -48,61 +48,6 @@ Traditional algorithms (Dijkstra, A*) fail here because:
 | **Multi-Agent Coordination** | Implicit coordination without communication | Warehouse robots, swarm robotics |
 | **Topology Generalization** | Works on graphs never seen during training | Adapts to new warehouses, cities, networks |
 
-### Visual: Training Pipeline
-
-![Training Pipeline](assets/01_training_pipeline.png)
-
-The pipeline generates graphs, extracts features, computes optimal paths as labels, and trains the GNN to predict edge probabilities.
-
-### Visual: Edge Probability Predictions
-
-![Edge Probabilities](assets/02_edge_probabilities.png)
-
-The GNN outputs probabilities for each edge being part of an optimal path. Red bars = high probability (use these edges), blue bars = low probability (avoid).
-
-### Visual: Flower Field Graph
-
-![Flower Field](assets/03_flower_field.png)
-
-The environment simulates a bee colony collecting nectar. Yellow = sources (hives), Red = sinks (flowers), Orange gradient = nectar density.
-
----
-
-## 📊 Key Results
-
-### Training Performance
-
-![Loss Curves](assets/04_loss_curves.png)
-
-- **Training loss**: 0.294 → 0.273 (7.4% improvement)
-- **Validation loss** tracks training (no overfitting)
-- **Model converges** within 50 epochs
-
-### Feature Distributions
-
-![Feature Distributions](assets/05_feature_distributions.png)
-
-Understanding the data: nectar density (uniform 0-1), out-degree (Poisson distribution), edge weights (exponential decay).
-
-### Scalability Comparison
-
-![Scalability](assets/08_scalability_comparison.png)
-
-GNN vs Dijkstra: GNN achieves near-constant inference time after training, while Dijkstra scales quadratically with graph size.
-
-### Quality vs Speed Trade-off
-
-![Quality vs Speed](assets/09_quality_vs_speed.png)
-
-Box plots comparing execution time and path cost quality across algorithms.
-
-### GNN Accuracy Analysis
-
-![Accuracy](assets/10_gnn_accuracy.png)
-
-GNN achieves ~83% of Dijkstra's optimal solution quality with significantly faster inference.
-
----
 
 ## 🏗️ Architecture
 
