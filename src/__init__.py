@@ -1,3 +1,5 @@
+# src/__init__.py
+
 from .env import FlowerFieldGenerator, Bee, BeeState, HiveMindEnvironment
 from .model import HiveMindGNN, EdgePredictor
 from .train import Trainer, GraphDataset

@@ -1,4 +1,7 @@
-from .hivemind_gnn import HiveMindGNN
-from .edge_predictor import EdgePredictor
+# src/model/__init__.py
 
-__all__ = ['HiveMindGNN', 'EdgePredictor']
+from .hivemind_gnn import HiveMindGNN
+from .predictor.edge_predictor import EdgePredictor
+from .predictor.path_predictor import PathPredictor
+
+__all__ = ['HiveMindGNN', 'EdgePredictor', 'PathPredictor']

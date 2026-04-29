@@ -1,3 +1,5 @@
+# tests/test_env.py
+
 import pytest
 import numpy as np
 import networkx as nx
@@ -189,7 +191,7 @@ class TestHiveMindEnvironment:
         env = HiveMindEnvironment(num_bees=3)
         env.reset()
         initial_occupancy = sum(
-            env.graph.nodes[i].get('current_occupancy', 0) 
+            env.graph.nodes[i].get('current_occupancy', 0)
             for i in range(env.graph_generator.num_nodes)
         )
         assert initial_occupancy == 3
