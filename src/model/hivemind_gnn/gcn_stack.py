@@ -40,18 +40,17 @@ class GCNStack(nn.Module):
             # GCN message passing
             x_new = conv(x, edge_index)
             # Multi-head feature-difference attention (DIFFGAT 2025)
-            B = x.shape[0]
+            B = x_new.shape[0]
             x_proj = proj(x_new).view(B, self.attention_heads, self.head_dim)
-            diff_weight = F.softmax(
-                (x_proj * x_proj.mean(dim=0, keepdim=True)).sum(dim=-1),
-                dim=-1
-            )
-            x_new = (x_new * diff_weight.unsqueeze(-1)).sum(
-                dim=0 if x_new.dim() == 2 else 1, keepdim=False
-            )
-            x_new = norm(x_new)
+            # Compute attention weights: (B, attention_heads)
+            attn_scores = (x_proj * x_proj.mean(dim=0, keepdim=True)).sum(dim=-1)
+            diff_weight = F.softmax(attn_scores, dim=-1)
+            # Apply attention and reshape back to (B, hidden_dim)
+            x_new_heads = x_new.view(B, self.attention_heads, self.head_dim)
+            x_attended = (x_new_heads * diff_weight.unsqueeze(-1)).view(B, self.hidden_dim)
+            x_new = norm(x_attended)
             x_new = F.relu(x_new)
-            x = x_new + x
+            x = x + x_new
             # Update edge embeddings if provided (EdgeGFL / Rohatgi 2025)
             if edge_emb is not None:
                 src, dst = edge_index[0], edge_index[1]

@@ -36,6 +36,9 @@ class HiveMindGNN(Module):
         edge_attr: torch.Tensor,
         batch: Optional[torch.Tensor] = None
     ) -> Tuple[torch.Tensor, torch.Tensor]:
+        # Handle batched input from PyG DataLoader
+        # node_features: (batch * num_nodes, features) or (num_nodes, features)
+        # edge_index: (2, num_edges) - PyG handles batching automatically
         x = self.node_encoder(node_features)
         edge_emb = self.edge_encoder(edge_attr)
         pos = self.pos_enc(edge_index, x.shape[0], x.device)
