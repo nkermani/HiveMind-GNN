@@ -1,10 +1,12 @@
 from torch_geometric.loader import DataLoader as PyGDataLoader
-from torch.utils.data import random_split; import torch
+from torch.utils.data import random_split
+import torch
 from src.env import FlowerFieldGenerator, HiveMindEnvironment
 from src.model import EdgePredictor
 from src.training import GraphDataset, Trainer
 from src.training.plotting import plot_training_history, plot_edge_predictions
 from torch_geometric.data import Data
+
 
 def main():
     print("=" * 60 + "\nHiveMind-GNN Training\n" + "=" * 60)
@@ -21,7 +23,8 @@ def main():
     print("Starting training...")
     h = t.train(tl, vl, num_epochs=100, checkpoint_dir='checkpoints', log_interval=10)
     print(f"\nDone! Train Loss: {h['train_loss'][-1]:.4f}")
-    if h['val_loss']: print(f"Val Loss: {h['val_loss'][-1]:.4f}")
+    if h['val_loss']:
+        print(f"Val Loss: {h['val_loss'][-1]:.4f}")
     t.save_checkpoint('checkpoints/final_model.pt')
     plot_training_history(h, save_path='checkpoints/training_history.png')
     e = HiveMindEnvironment(num_bees=10, graph_generator=g)
@@ -35,6 +38,7 @@ def main():
     print(f"\nSample predictions: {ep[:10].cpu().numpy()}")
     plot_edge_predictions(ep.cpu().numpy(), save_path='checkpoints/edge_predictions.png')
     return t, h
+
 
 if __name__ == '__main__':
     trainer, history = main()
