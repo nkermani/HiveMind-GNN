@@ -66,7 +66,7 @@ HiveMindGNN
     └── Concatenate(src_emb, dst_emb) → MLP(128,64) → Linear(64,1) → Sigmoid
 ```
 
-**Total Parameters:** ~50K (lightweight, deployable on edge devices)
+| **Total Parameters:** | **~73K** (lightweight, deployable on edge devices) |
 
 ---
 
@@ -88,38 +88,50 @@ python visualize.py
 ```
 
 ### Train the Model
-
 ```python
-from src.train import Trainer, GraphDataset
+from src.train import main
+from src.training import GraphDataset, Trainer
 from src.model import EdgePredictor
-from torch_geometric.loader import DataLoader as PyGDataLoader
+from src.env import FlowerFieldGenerator
 
-# Setup
-gen = FlowerFieldGenerator(num_nodes=50, seed=42)
-dataset = GraphDataset(gen, num_samples=500)
-loader = PyGDataLoader(dataset, batch_size=32, shuffle=True)
+# Run full training with visualization
+trainer, history = main()
 
-# Train
+# Or customize training
+generator = FlowerFieldGenerator(num_nodes=50, seed=42)
+dataset = GraphDataset(generator, num_samples=500)
 model = EdgePredictor()
 trainer = Trainer(model)
-trainer.train(loader, num_epochs=100, log_interval=10)
+# See src/train.py for full options
 ```
 
 ### Make Predictions
-
 ```python
 import torch
+from src.env import FlowerFieldGenerator, HiveMindEnvironment
+from src.model import EdgePredictor
+from torch_geometric.data import Data
 
-# Get observation
+# Load trained model
+model = EdgePredictor()
+model.load_state_dict(torch.load('checkpoints/final_model.pt'))
+
+# Get observation from environment
+generator = FlowerFieldGenerator(num_nodes=50)
+env = HiveMindEnvironment(num_bees=10, graph_generator=generator)
 obs = env.reset()
-node_features = torch.tensor(obs['node_features'])
-edge_index = torch.tensor(obs['edge_index'])
-edge_attr = torch.tensor(obs['edge_attr'])
+
+# Create PyG Data object
+data = Data(
+    x=torch.tensor(obs['node_features'], dtype=torch.float32),
+    edge_index=torch.tensor(obs['edge_index'], dtype=torch.long),
+    edge_attr=torch.tensor(obs['edge_attr'], dtype=torch.float32)
+)
 
 # Predict optimal edges
 model.eval()
 with torch.no_grad():
-    edge_probs, _ = model(node_features, edge_index, edge_attr)
+    edge_probs, _ = model(data.x, data.edge_index, data.edge_attr)
 
 # edge_probs: which edges lead to optimal routes?
 ```
@@ -131,27 +143,38 @@ with torch.no_grad():
 ```
 HiveMind-GNN/
 ├── assets/                     # Visual assets for README
+├── checkpoints/                # Saved models (excluded from git)
 ├── data/                      # Dataset storage
 ├── notebooks/
-│   └── 01_exploration.ipynb   # Interactive exploration
+│   ├── EXPLANATIONS.md       # Theory & deep-dive
+│   ├── STATE_OF_ART.md       # Literature survey
+│   ├── SUBJECT.md            # Project subject
+│   └── TECHNICAL_STACK.md   # Technology showcase
 ├── src/
-│   ├── env/
-│   │   ├── bee.py             # Multi-agent simulation
-│   │   ├── environment.py    # Gym-like environment
-│   │   └── graph_generator.py # Barabasi-Albert graphs
+│   ├── env.py                # Environment & graph generator
 │   ├── model/
-│   │   ├── hivemind_gnn.py    # GCN architecture
-│   │   └── edge_predictor.py  # Prediction head
-│   └── train.py               # Training pipeline
+│   │   ├── hivemind_gnn/     # GNN architecture
+│   │   │   ├── encoders.py
+│   │   │   ├── gcn_stack.py
+│   │   │   ├── edge_scorer.py
+│   │   │   ├── path_scorer.py
+│   │   │   └── positional_encoding.py
+│   │   └── predictor/        # Prediction heads
+│   │       ├── edge_predictor.py
+│   │       └── path_predictor.py
+│   ├── training/             # Training pipeline
+│   │   ├── dataset.py
+│   │   ├── trainer.py
+│   │   └── plotting.py
+│   └── train.py             # Main training script (40 lines)
 ├── tests/
-│   ├── test_env.py            # Environment tests
-│   └── test_model.py          # Model tests
-├── visualizations/            # Generated PNGs
-├── visualize.py               # Visualization script
-├── EXPLANATIONS.md            # Theory & deep-dive
-├── TECHNICAL_STACK.md         # Technology showcase
+│   ├── test_env.py
+│   └── test_model.py
+├── visualizations/            # Generated PNGs (excluded from git)
+├── shell.nix                 # Nix dev environment
+├── visualize.py
+├── benchmark.py
 ├── requirements.txt
-├── setup.py
 └── README.md
 ```
 
