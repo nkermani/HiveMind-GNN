@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict
+from typing import Dict, Optional
 from .bee import Bee, BeeState
 from .flower_field import FlowerFieldGenerator
 
@@ -14,8 +14,8 @@ class HiveMindEnvironment:
         self.bees = []
         self.step_count = 0
 
-    def reset(self):
-        self.graph = self.graph_generator.generate()
+    def reset(self, graph=None):
+        self.graph = graph if graph is not None else self.graph_generator.generate()
         self.bees = [Bee(i, np.random.choice(list(self.graph.nodes()))) for i in range(self.num_bees)]
         self.step_count = 0
         return self._get_observation()
