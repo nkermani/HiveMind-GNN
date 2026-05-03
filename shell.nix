@@ -1,24 +1,32 @@
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.mkShell {
-  buildInputs = [
+  buildInputs = with pkgs.python3Packages; [
     pkgs.python3
-    pkgs.python3Packages.numpy
-    pkgs.python3Packages.networkx
-    pkgs.python3Packages.torch
+    numpy
+    networkx
+    torch
+    torchvision
+    matplotlib
+    seaborn
+    pandas
+    tqdm
+    pytest
+    pillow
     pkgs.gcc
     pkgs.zlib
+    pkgs.git
   ];
 
   shellHook = ''
-    # Create venv if it doesn't exist
+    # Create venv if it doesn't exist and install torch_geometric
     if [ ! -d venv ]; then
       python -m venv venv
-      source venv/bin/activate
-      pip install torch_geometric --break-system-packages 2>/dev/null || \
-      pip install torch_geometric
     fi
     source venv/bin/activate
+    pip install torch_geometric 2>/dev/null || echo "torch_geometric may already be installed"
+
     export PYTHONPATH="$PWD:$PYTHONPATH"
+    echo "Nix shell ready. PYTHONPATH=$PYTHONPATH"
   '';
 }
