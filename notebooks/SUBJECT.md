@@ -65,7 +65,3 @@ git clone https://github.com/nkermani/HiveMind-GNN.git
 # Install dependencies
 pip install torch torch-geometric pandas numpy
 ```
-
-## 💡 Connection to NAVER LABS Europe
-
-This project serves as a direct implementation of the concepts outlined in the Neural Combinatorial Optimization research track at NAVER LABS, specifically focusing on Robot Fleet Management and Multi-Agent Coordination.

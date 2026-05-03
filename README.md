@@ -279,7 +279,7 @@ Run `python benchmark.py` to generate comparative analysis:
 
 ## 🙏 Acknowledgments
 
-Inspired by the Lem-in challenge from the 42 curriculum and neural combinatorial optimization research at NAVER LABS Europe.
+Inspired by the Lem-in challenge from the 42 curriculum.
 
 ---
 

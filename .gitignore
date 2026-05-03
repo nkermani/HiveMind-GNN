@@ -218,5 +218,7 @@ __marimo__/
 # HiveMind-GNN
 checkpoints/
 *.pt
+**/assets/
+**/assets/*.png
 # visualizations/*.png
 # !visualizations/.gitkeep
